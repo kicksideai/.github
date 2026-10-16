@@ -7,7 +7,7 @@ KickSide provides a runnable application and independently installable Lua modul
 
 [Website](https://kickside.ai) · [Documentation](https://github.com/kicksideai/docs) · [Get started](https://github.com/kicksideai/docs/blob/main/getting-started/index.md)
 
-![The KickSide application hosts a Chestor graph with fictional demonstration data](https://raw.githubusercontent.com/kicksideai/docs/main/using/assets/chestor/graph.png)
+![KickSide with fictional demonstration data: an agent chat, the CRM pipeline, a visual workflow, and a knowledge base](https://raw.githubusercontent.com/kicksideai/docs/main/assets/readme/kickside-overview.webp)
 
 | Repository | What it provides |
 | --- | --- |
