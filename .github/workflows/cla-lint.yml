@@ -1,0 +1,22 @@
+name: CLA workflow lint
+
+'on':
+  pull_request:
+    paths:
+    - .github/workflows/cla.yml
+    - .github/workflows/cla-lint.yml
+
+permissions:
+  checks: write
+  contents: read
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+    - uses: reviewdog/action-actionlint@6a9ff88b9bb9c12ff3d7340e267f0f59effaa7cd
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: github-pr-check
+        fail_level: error

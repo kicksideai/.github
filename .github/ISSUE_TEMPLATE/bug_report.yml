@@ -1,0 +1,49 @@
+name: Bug report
+description: Report a reproducible defect in this repository.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Report security vulnerabilities privately under the [security policy](https://github.com/kicksideai/.github/blob/main/SECURITY.md).
+        Remove tokens, credentials, and personal or customer data from examples and logs.
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Repository or module release, Wippy CLI/runtime version, and operating system.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include a minimal example and relevant configuration with secrets removed.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Redacted logs or screenshots
+      description: Include the smallest relevant output; check it for sensitive information.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched for existing reports.
+          required: true
+        - label: I removed credentials and private data.
+          required: true

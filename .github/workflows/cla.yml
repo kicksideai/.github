@@ -1,0 +1,92 @@
+# Individual CLA enforcement for contributors outside the organization.
+# Members of the kicksideai organization are exempt: the PR author's
+# membership is checked with the CLA GitHub App installation token
+# (organization permission Members: read-only) and the signature steps are
+# skipped for members. All other authors must sign the CLA.
+name: CLA
+
+'on':
+  workflow_call:
+    secrets:
+      CLA_APP_PRIVATE_KEY:
+        required: true
+
+permissions:
+  actions: write
+  contents: read
+  issues: write
+  pull-requests: write
+  statuses: write
+
+jobs:
+  check:
+    name: Contributor license agreement
+    if: >-
+      github.event_name == 'pull_request_target' ||
+      (github.event.issue.pull_request &&
+      (github.event.comment.body == 'recheck' ||
+      github.event.comment.body == 'I have read and agree to the KickSide Individual Contributor License Agreement, Version 1.0.'))
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Create a membership-read token
+      id: member-token
+      uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+      with:
+        app-id: ${{ vars.CLA_APP_ID }}
+        private-key: ${{ secrets.CLA_APP_PRIVATE_KEY }}
+        owner: kicksideai
+        permission-members: read
+    - name: Check organization membership
+      id: membership
+      env:
+        GH_TOKEN: ${{ steps.member-token.outputs.token }}
+        AUTHOR: ${{ github.event.pull_request.user.login || github.event.issue.user.login }}
+      run: |
+        set -euo pipefail
+        status=$(curl -sS -o /dev/null -w '%{http_code}' \
+          -H "Authorization: Bearer ${GH_TOKEN}" \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          "https://api.github.com/orgs/kicksideai/members/${AUTHOR}")
+        case "${status}" in
+          204)
+            echo "member=true" >> "${GITHUB_OUTPUT}"
+            echo "Organization member: CLA not required (@${AUTHOR})." >> "${GITHUB_STEP_SUMMARY}"
+            ;;
+          404)
+            echo "member=false" >> "${GITHUB_OUTPUT}"
+            ;;
+          *)
+            echo "Unexpected membership response ${status} for @${AUTHOR}" >&2
+            exit 1
+            ;;
+        esac
+    - name: Create a signature-store token
+      id: signature-token
+      if: steps.membership.outputs.member != 'true'
+      uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+      with:
+        app-id: ${{ vars.CLA_APP_ID }}
+        private-key: ${{ secrets.CLA_APP_PRIVATE_KEY }}
+        owner: kicksideai
+        repositories: .github-private
+        permission-contents: write
+    - name: Check contributor agreement
+      if: steps.membership.outputs.member != 'true'
+      uses: contributor-assistant/github-action@ca4a40a7d1004f18d9960b404b97e5f30a505a08
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PERSONAL_ACCESS_TOKEN: ${{ steps.signature-token.outputs.token }}
+      with:
+        path-to-signatures: signatures/kickside-cla-v1.json
+        path-to-document: https://github.com/kicksideai/.github/blob/main/CLA.md
+        branch: main
+        allowlist: "*[bot]"
+        remote-organization-name: kicksideai
+        remote-repository-name: .github-private
+        custom-pr-sign-comment: "I have read and agree to the KickSide Individual Contributor License Agreement, Version 1.0."
+        custom-notsigned-prcomment: >-
+          Read the KickSide Individual Contributor License Agreement at
+          https://github.com/kicksideai/.github/blob/main/CLA.md, then comment
+          `I have read and agree to the KickSide Individual Contributor License
+          Agreement, Version 1.0.` to record your agreement.

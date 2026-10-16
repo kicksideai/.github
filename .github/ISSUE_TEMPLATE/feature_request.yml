@@ -1,0 +1,31 @@
+name: Feature request
+description: Propose a concrete improvement to this repository.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For open-ended design or usage questions, start in [KickSide Discussions](https://github.com/kicksideai/kickside/discussions).
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: Explain who needs this capability and what they cannot do today.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the user-visible result and the affected module or contract.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: textarea
+    id: validation
+    attributes:
+      label: How to validate the result
+      description: Describe an example or acceptance criteria.

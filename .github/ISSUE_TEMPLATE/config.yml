@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://hub.wippy.ai/kickside/kickside/wiki/docs/kickside-development/developer-handbook.md
+    about: Read the setup, module development, and testing handbook.
+  - name: Questions and discussions
+    url: https://github.com/kicksideai/kickside/discussions
+    about: Ask usage questions or discuss an idea before filing a request.
+  - name: Private security reporting
+    url: https://github.com/kicksideai/.github/blob/main/SECURITY.md
+    about: Use a private advisory report or the email fallback; do not file a public issue.
