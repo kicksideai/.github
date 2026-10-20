@@ -1,14 +1,15 @@
 # Individual CLA enforcement for contributors outside the organization.
 # Members of the kicksideai organization are exempt: the PR author's
-# membership is checked with the CLA GitHub App installation token
-# (organization permission Members: read-only) and the signature steps are
-# skipped for members. All other authors must sign the CLA.
+# membership is checked with the CLA_TOKEN organization secret (scope
+# read:org) and the signature steps are skipped for members. All other
+# authors must sign the CLA. The same token (scope repo) writes the
+# signatures to the private .github-private repository.
 name: CLA
 
 'on':
   workflow_call:
     secrets:
-      CLA_APP_PRIVATE_KEY:
+      CLA_TOKEN:
         required: true
 
 permissions:
@@ -28,18 +29,10 @@ jobs:
       github.event.comment.body == 'I have read and agree to the KickSide Individual Contributor License Agreement, Version 1.0.'))
     runs-on: ubuntu-24.04
     steps:
-    - name: Create a membership-read token
-      id: member-token
-      uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
-      with:
-        app-id: ${{ vars.CLA_APP_ID }}
-        private-key: ${{ secrets.CLA_APP_PRIVATE_KEY }}
-        owner: kicksideai
-        permission-members: read
     - name: Check organization membership
       id: membership
       env:
-        GH_TOKEN: ${{ steps.member-token.outputs.token }}
+        GH_TOKEN: ${{ secrets.CLA_TOKEN }}
         AUTHOR: ${{ github.event.pull_request.user.login || github.event.issue.user.login }}
       run: |
         set -euo pipefail
@@ -61,22 +54,12 @@ jobs:
             exit 1
             ;;
         esac
-    - name: Create a signature-store token
-      id: signature-token
-      if: steps.membership.outputs.member != 'true'
-      uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
-      with:
-        app-id: ${{ vars.CLA_APP_ID }}
-        private-key: ${{ secrets.CLA_APP_PRIVATE_KEY }}
-        owner: kicksideai
-        repositories: .github-private
-        permission-contents: write
     - name: Check contributor agreement
       if: steps.membership.outputs.member != 'true'
       uses: contributor-assistant/github-action@ca4a40a7d1004f18d9960b404b97e5f30a505a08
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        PERSONAL_ACCESS_TOKEN: ${{ steps.signature-token.outputs.token }}
+        PERSONAL_ACCESS_TOKEN: ${{ secrets.CLA_TOKEN }}
       with:
         path-to-signatures: signatures/kickside-cla-v1.json
         path-to-document: https://github.com/kicksideai/.github/blob/main/CLA.md
