@@ -1,0 +1,28 @@
+name: Legal check
+description: Verify THIRD_PARTY_NOTICES.md matches the locked npm and Cargo dependencies, and require SPDX headers on source files added since a base revision.
+
+inputs:
+  root:
+    description: Repository root to check
+    default: .
+  base:
+    description: Git revision to check SPDX headers against; empty skips the header check
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Check third-party notices
+      shell: bash
+      env:
+        LEGAL_ROOT: ${{ inputs.root }}
+        LEGAL_BASE: ${{ inputs.base }}
+        LEGAL_CACHE: ${{ runner.temp }}/legal-cache
+        LEGAL_TOOL: ${{ github.action_path }}/notices.py
+      run: |
+        set -euo pipefail
+        args=(--root "$LEGAL_ROOT" --cache "$LEGAL_CACHE" --check)
+        if [ -n "$LEGAL_BASE" ]; then
+          args+=(--base "$LEGAL_BASE")
+        fi
+        python3 "$LEGAL_TOOL" "${args[@]}"

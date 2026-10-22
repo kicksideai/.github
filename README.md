@@ -5,7 +5,7 @@
 
 # KickSide community resources
 
-Shared contribution, support, security, and conduct documents for the KickSide organization. The repository also contains the organization [profile](profile/README.md), pull request template, and the `setup-wippy` composite action used by repository workflows.
+Shared contribution, support, security, and conduct documents for the KickSide organization. The repository also contains the organization [profile](profile/README.md), pull request template, and the `setup-wippy` and `legal-check` composite actions used by repository workflows. `legal-check` fails when `THIRD_PARTY_NOTICES.md` no longer matches the locked npm and Cargo dependencies, or when a source file added in a pull request lacks an SPDX header; regenerate notices locally with `python3 actions/legal-check/notices.py --root <repo> --cache <cache-dir>`.
 
 - [Contributing](CONTRIBUTING.md)
 - [Contributor license agreement](CLA.md) (organization members are exempt)
