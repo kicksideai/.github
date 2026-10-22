@@ -61,7 +61,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PERSONAL_ACCESS_TOKEN: ${{ secrets.CLA_TOKEN }}
       with:
-        path-to-signatures: signatures/kickside-cla-v1.json
+        path-to-signatures: signatures/kickside-cla-v1.1.json
         path-to-document: https://github.com/kicksideai/.github/blob/main/CLA.md
         branch: main
         allowlist: "*[bot]"
