@@ -3,7 +3,7 @@
 Version 1.0 — September 30, 2026
 
 In order to clarify the intellectual property license granted with Contributions from any person or entity,
-kicksideai ("Company") must have a Contributor License Agreement ("CLA") on file that has been signed by each
+Spiral Scout LLC ("Company") must have a Contributor License Agreement ("CLA") on file that has been signed by each
 Contributor, indicating agreement to the license terms below. This license is for your protection as a Contributor as
 well as the protection of Company; it does not change your rights to use your own Contributions for any other purpose.
 
