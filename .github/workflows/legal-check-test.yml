@@ -1,0 +1,21 @@
+name: Legal check tests
+
+'on':
+  pull_request:
+    paths:
+    - actions/legal-check/**
+    - .github/workflows/legal-check-test.yml
+
+permissions:
+  contents: read
+
+jobs:
+  unittest:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      with:
+        persist-credentials: false
+    - name: Run notices tests
+      working-directory: actions/legal-check
+      run: python3 -m unittest -v test_notices
