@@ -2,6 +2,7 @@
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import tarfile
 import tempfile
@@ -65,6 +66,45 @@ class NoticesTests(unittest.TestCase):
             before = {'source.lua': '-- SPDX-License-Identifier: MIT\nreturn {}\n'}
             self.assertEqual(notices.header_findings(root, [('M', 'source.lua')], before),
                              ['source.lua: missing SPDX-License-Identifier'])
+
+    @unittest.skipUnless(hasattr(os, 'symlink'), 'symlinks are unavailable')
+    def test_source_symlink_to_in_repo_source_is_not_new_authored_code(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / 'legacy.lua').write_text('return {}\n')
+            (root / 'assist_under_test.lua').symlink_to('legacy.lua')
+            self.assertEqual(notices.header_findings(root, [('A', 'assist_under_test.lua')]), [])
+
+    @unittest.skipUnless(hasattr(os, 'symlink'), 'symlinks are unavailable')
+    def test_source_symlink_must_resolve_to_in_repo_source_outside_ignored_areas(self):
+        with tempfile.TemporaryDirectory() as temp, tempfile.TemporaryDirectory() as outside_temp:
+            root = Path(temp)
+            outside = Path(outside_temp) / 'outside.lua'
+            outside.write_text('-- SPDX-License-Identifier: MIT\nreturn {}\n')
+            (root / 'vendor').mkdir()
+            (root / 'vendor' / 'library.lua').write_text('-- SPDX-License-Identifier: MIT\nreturn {}\n')
+            (root / 'not_source.txt').write_text('not source\n')
+            (root / 'directory.lua').mkdir()
+            (root / 'dangling.lua').symlink_to('missing.lua')
+            (root / 'outside.lua').symlink_to(outside)
+            (root / 'vendor.lua').symlink_to('vendor/library.lua')
+            (root / 'not_source.lua').symlink_to('not_source.txt')
+            (root / 'directory_target.lua').symlink_to('directory.lua')
+            self.assertEqual(
+                notices.header_findings(root, [
+                    ('A', 'dangling.lua'),
+                    ('M', 'outside.lua'),
+                    ('A', 'vendor.lua'),
+                    ('A', 'not_source.lua'),
+                    ('A', 'directory_target.lua'),
+                ]),
+                [
+                    'dangling.lua: source symlink is dangling',
+                    'outside.lua: source symlink escapes repository root',
+                    'vendor.lua: source symlink targets ignored source area',
+                    'not_source.lua: source symlink target is not a source file',
+                    'directory_target.lua: source symlink target is not a regular file',
+                ])
 
 
 class WippyWorkspaceTests(unittest.TestCase):
