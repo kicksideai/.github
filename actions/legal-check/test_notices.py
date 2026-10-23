@@ -65,3 +65,102 @@ class NoticesTests(unittest.TestCase):
             before = {'source.lua': '-- SPDX-License-Identifier: MIT\nreturn {}\n'}
             self.assertEqual(notices.header_findings(root, [('M', 'source.lua')], before),
                              ['source.lua: missing SPDX-License-Identifier'])
+
+
+class WippyWorkspaceTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.lock = self.root / 'ui/package-lock.json'
+        self.lock.parent.mkdir()
+        self.name = '@example/widgets'
+        self.location = '.wippy/npm/' + self.name
+        self.data = {'packages': {self.location: {'version': '1.2.3', 'license': 'MIT'},
+            'node_modules/' + self.name: {'link': True, 'resolved': self.location}}}
+        self.component = {'name': self.name, 'version': '1.2.3',
+            'properties': [{'name': 'cdx:npm:package:path', 'value': self.location}],
+            'licenses': [{'license': {'id': 'MIT'}}]}
+        self.save()
+
+    def save(self):
+        self.lock.write_text(json.dumps(self.data))
+
+    def inspect(self):
+        return notices.wippy_workspace_texts(self.component, self.lock, self.root)
+
+    def materialize(self):
+        directory = self.lock.parent / self.location
+        directory.mkdir(parents=True)
+        (directory / 'package.json').write_text(json.dumps({
+            'name': self.name, 'version': '1.2.3', 'license': 'MIT'}))
+        return directory
+
+    def test_built_artifact_retains_locked_license_in_inventory(self):
+        self.materialize()
+        (self.root / 'ui/package.json').write_text(json.dumps({'name': '@example/app'}))
+        with patch('notices.tracked', return_value=['ui/package.json', 'ui/package-lock.json']), \
+             patch('notices.command_json', return_value={'components': [self.component]}), \
+             patch('notices.urlopen', side_effect=AssertionError('workspace must not fetch an npm archive')):
+            records = notices.collect(self.root, self.root / 'cache')
+        row = records[('npm', self.name, '1.2.3')]
+        self.assertEqual(row['license'], 'MIT')
+        self.assertEqual(row['sources'], {'ui/package-lock.json'})
+        rendered = notices.render('# Notices\n', records)
+        self.assertIn('@example/widgets@1.2.3', rendered)
+        self.assertIn('License: MIT', rendered)
+
+
+    def test_unbuilt_artifact_requires_materialization_instead_of_omitting_attribution(self):
+        with self.assertRaisesRegex(ValueError, 'Materialize Wippy build inputs'):
+            self.inspect()
+
+    def test_materialized_attribution_is_preserved(self):
+        (self.materialize() / 'LICENSE').write_text('MIT\nCopyright Widget Authors\n')
+        self.assertEqual(self.inspect(), ('MIT', {'LICENSE': 'MIT\nCopyright Widget Authors\n'}))
+
+    def test_mismatched_version_and_link_are_rejected(self):
+        for field, value in [('version', '9.9.9'), ('license', '')]:
+            with self.subTest(field=field):
+                original = self.data['packages'][self.location][field]
+                self.data['packages'][self.location][field] = value
+                self.save()
+                with self.assertRaises(ValueError):
+                    self.inspect()
+                self.data['packages'][self.location][field] = original
+        self.data['packages']['node_modules/' + self.name]['resolved'] = '../somewhere'
+        self.save()
+        with self.assertRaisesRegex(ValueError, 'match its lock'):
+            self.inspect()
+
+    def test_sbom_license_and_materialized_license_must_match_lock(self):
+        self.component['licenses'] = [{'license': {'id': 'Apache-2.0'}}]
+        with self.assertRaisesRegex(ValueError, 'license differs'):
+            self.inspect()
+        self.component['licenses'] = [{'license': {'id': 'MIT'}}]
+        directory = self.materialize()
+        (directory / 'package.json').write_text(json.dumps({
+            'name': self.name, 'version': '1.2.3', 'license': 'Apache-2.0'}))
+        with self.assertRaisesRegex(ValueError, 'differs from its lock'):
+            self.inspect()
+
+    def test_unknown_nonarchive_dependency_keeps_existing_failure(self):
+        self.component['properties'][0]['value'] = '../outside'
+        self.assertIsNone(self.inspect())
+        with self.assertRaisesRegex(ValueError, 'no unique locked archive'):
+            notices.npm_texts(self.component, self.root)
+
+    def test_symlinked_artifact_and_legal_file_cannot_escape_repository(self):
+        with tempfile.TemporaryDirectory() as external:
+            directory = self.lock.parent / self.location
+            directory.parent.mkdir(parents=True)
+            directory.symlink_to(external, target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, 'outside the repository'):
+                self.inspect()
+            directory.unlink()
+            directory = self.materialize()
+            text = Path(external) / 'LICENSE'
+            text.write_text('outside')
+            (directory / 'LICENSE').symlink_to(text)
+            with self.assertRaisesRegex(ValueError, 'outside the repository'):
+                self.inspect()
