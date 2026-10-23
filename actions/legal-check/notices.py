@@ -55,6 +55,47 @@ def npm_texts(component, cache):
     return license_id, texts
 
 
+def wippy_workspace_texts(component, lock_path, root):
+    """Read a locked materialized Wippy artifact; never invent an npm archive."""
+    name = component['name']
+    if not re.fullmatch(r'@[a-z0-9][a-z0-9._-]*/[a-z0-9][a-z0-9._-]*', name):
+        return None
+    expected = '.wippy/npm/' + name
+    locations = [p['value'] for p in component.get('properties', [])
+                 if p['name'] == 'cdx:npm:package:path']
+    if locations != [expected]:
+        return None
+    packages = json.loads(lock_path.read_text()).get('packages', {})
+    package = packages.get(expected, {})
+    link = packages.get('node_modules/' + name, {})
+    if package.get('version') != component['version'] or link.get('link') is not True or link.get('resolved') != expected:
+        raise ValueError('Wippy workspace does not match its lock: ' + name)
+    license_id = package.get('license')
+    if not isinstance(license_id, str) or not license_id.strip():
+        raise ValueError('Wippy workspace has no locked license: ' + name)
+    declared = [v.get('expression') or v.get('license', {}).get('id') or v.get('license', {}).get('name')
+                for v in component.get('licenses', [])]
+    if declared != [license_id]:
+        raise ValueError('Wippy workspace license differs from its lock: ' + name)
+    directory = lock_path.parent / expected
+    if not directory.resolve().is_relative_to(root.resolve()):
+        raise ValueError('Wippy workspace resolves outside the repository: ' + name)
+    texts = {}
+    if not directory.exists():
+        raise ValueError('Materialize Wippy build inputs before checking notices: ' + name)
+    if directory.exists():
+        metadata = json.loads((directory / 'package.json').read_text())
+        if any(metadata.get(k) != value for k, value in
+               [('name', name), ('version', component['version']), ('license', license_id)]):
+            raise ValueError('Materialized Wippy package differs from its lock: ' + name)
+        for path in sorted(directory.iterdir()):
+            if path.is_file() and LEGAL_FILE.match(path.name):
+                if not path.resolve().is_relative_to(root.resolve()):
+                    raise ValueError('Wippy workspace legal file resolves outside the repository: ' + name)
+                texts[path.name] = path.read_text()
+    return license_id, texts
+
+
 def cargo_texts(package):
     directory = Path(package['manifest_path']).parent
     if package.get('license_file'):
@@ -91,7 +132,13 @@ def collect(root, cache):
                 if row['license'] != expression:
                     raise ValueError('Inconsistent locked license: ' + item['name'])
                 row['sources'].add(name)
-                components[key] = item
+                workspace = None
+                if not any(ref['type'] == 'distribution' for ref in item.get('externalReferences', [])):
+                    workspace = wippy_workspace_texts(item, path, root)
+                if workspace is None:
+                    components[key] = item
+                else:
+                    row['texts'].update(workspace[1])
         elif path.name == 'Cargo.lock':
             metadata = command_json(['cargo', 'metadata', '--locked', '--format-version', '1'], path.parent)
             for item in metadata['packages']:
