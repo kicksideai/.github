@@ -16,6 +16,7 @@ MARKER = '<!-- BEGIN GENERATED DEPENDENCY NOTICES -->'
 LEGAL_FILE = re.compile(r'^(licen[cs]e|copying|copyright|notice)([.\-_ ].*)?$', re.I)
 SOURCE_SUFFIXES = {'.lua', '.py', '.mjs', '.cjs', '.js', '.jsx', '.ts', '.tsx', '.yaml',
                    '.yml', '.sh', '.ps1', '.css', '.scss', '.vue', '.html', '.md', '.toml', '.rs', '.c', '.h'}
+IGNORED_SOURCE_PARTS = {'static', 'ui_fs', 'vendor', 'node_modules'}
 
 
 def command_json(args, root):
@@ -184,14 +185,41 @@ def render(existing, records):
     return '\n'.join(lines).rstrip() + '\n'
 
 
+def source_symlink_error(root, path):
+    try:
+        target = path.resolve(strict=True)
+    except FileNotFoundError:
+        return 'source symlink is dangling'
+    except (OSError, RuntimeError):
+        return 'source symlink cannot be resolved'
+    try:
+        relative = target.relative_to(root)
+    except ValueError:
+        return 'source symlink escapes repository root'
+    if not target.is_file():
+        return 'source symlink target is not a regular file'
+    if target.suffix not in SOURCE_SUFFIXES:
+        return 'source symlink target is not a source file'
+    if any(part in IGNORED_SOURCE_PARTS for part in relative.parts):
+        return 'source symlink targets ignored source area'
+    return None
+
+
 def header_findings(root, changes, previous=None):
     findings = []
     previous = previous or {}
     for status, name in changes:
         path = root / name
-        if not path.is_file() or path.suffix not in SOURCE_SUFFIXES:
+        if path.suffix not in SOURCE_SUFFIXES:
             continue
-        if any(part in {'static', 'ui_fs', 'vendor', 'node_modules'} for part in path.relative_to(root).parts):
+        if path.is_symlink():
+            error = source_symlink_error(root, path)
+            if error:
+                findings.append(name + ': ' + error)
+            continue
+        if not path.is_file():
+            continue
+        if any(part in IGNORED_SOURCE_PARTS for part in path.relative_to(root).parts):
             continue
         required = status == 'A' or 'SPDX-License-Identifier:' in previous.get(name, '')[:2048]
         if required and not re.search(r'SPDX-License-Identifier:\s*\S+', path.read_text()[:2048]):
