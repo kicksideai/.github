@@ -26,7 +26,7 @@ jobs:
       github.event_name == 'pull_request_target' ||
       (github.event.issue.pull_request &&
       (github.event.comment.body == 'recheck' ||
-      github.event.comment.body == 'I have read and agree to the KickSide Individual Contributor License Agreement, Version 1.0.'))
+      github.event.comment.body == 'I have read and agree to the KickSide Individual Contributor License Agreement, Version 1.1.'))
     runs-on: ubuntu-24.04
     steps:
     - name: Check organization membership
@@ -61,15 +61,15 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PERSONAL_ACCESS_TOKEN: ${{ secrets.CLA_TOKEN }}
       with:
-        path-to-signatures: signatures/kickside-cla-v1.json
+        path-to-signatures: signatures/kickside-cla-v1.1.json
         path-to-document: https://github.com/kicksideai/.github/blob/main/CLA.md
         branch: main
         allowlist: "*[bot]"
         remote-organization-name: kicksideai
         remote-repository-name: .github-private
-        custom-pr-sign-comment: "I have read and agree to the KickSide Individual Contributor License Agreement, Version 1.0."
+        custom-pr-sign-comment: "I have read and agree to the KickSide Individual Contributor License Agreement, Version 1.1."
         custom-notsigned-prcomment: >-
           Read the KickSide Individual Contributor License Agreement at
           https://github.com/kicksideai/.github/blob/main/CLA.md, then comment
           `I have read and agree to the KickSide Individual Contributor License
-          Agreement, Version 1.0.` to record your agreement.
+          Agreement, Version 1.1.` to record your agreement.
