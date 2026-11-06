@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/kicksideai/.github/compare/v0.1.0...v0.1.1) (2026-11-06)
+
+
+### Documentation
+
+* **profile:** shorten the organization README ([#10](https://github.com/kicksideai/.github/issues/10)) ([595c02c](https://github.com/kicksideai/.github/commit/595c02cf0c76a918da5989f0642af00b06c3655f))
+
 ## 0.1.0 (2026-10-25)
 
 
