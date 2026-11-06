@@ -17,7 +17,7 @@ pull request when an external contributor needs to sign. Read the agreement and
 comment exactly:
 
 ```
-I have read and agree to the KickSide Individual Contributor License Agreement, Version 1.0.
+I have read and agree to the KickSide Individual Contributor License Agreement, Version 1.1.
 ```
 
 The check records the signature against the contributor's GitHub account in a

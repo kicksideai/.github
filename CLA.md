@@ -1,49 +1,57 @@
 # KickSide Individual Contributor License Agreement
 
-Version 1.0 — September 30, 2026
+Version 1.1 — October 22, 2026
 
 This agreement follows the structure of the Apache Individual Contributor
-License Agreement v2.2, adapted for the commercial licensor named below. It is
-not an agreement with the Apache Software Foundation.
+License Agreement v2.2. It is not an agreement with the Apache Software
+Foundation.
 
-Thank you for your interest in contributing to projects owned or managed by
-Spiral Scout LLC, a Delaware limited liability company doing business as
-Wippy.AI (the **Company**). This agreement clarifies the intellectual property
-licenses granted with your contributions. Read it before signing and retain a
-copy. Send a signed copy privately to [licensing@wippy.ai](mailto:licensing@wippy.ai).
+In order to clarify the intellectual property license granted with
+Contributions from any person or entity, Spiral Scout LLC, a Delaware limited
+liability company doing business as Wippy.AI ("Company") must have a
+Contributor License Agreement ("CLA") on file that has been signed by each
+Contributor, indicating agreement to the license terms below. This license is
+for your protection as a Contributor as well as the protection of Company; it
+does not change your rights to use your own Contributions for any other
+purpose.
 
-You accept these terms for present and future Contributions you intentionally
-submit to the Company. Except for the licenses granted here, you retain all
-right, title, and interest in your Contributions and may use them for any other
-purpose. This agreement grants licenses; it does not assign ownership.
+You accept and agree to the following terms and conditions for Your present and
+future Contributions submitted to Company. Except for the license granted
+herein to Company and recipients of software distributed by Company, You
+reserve all right, title, and interest in and to Your Contributions.
 
-## 1. Definitions
+1. Definitions.
 
-**You** or **Your** means the individual copyright owner, or the individual
-legally authorized by that owner, entering into this agreement. If you act on
-behalf of a legal entity, that entity and entities controlling, controlled by,
-or under common control with it are treated as one contributor. **Control**
-means the power to direct management by contract or otherwise, ownership of
-50% or more of outstanding shares, or beneficial ownership of the entity.
+"You" (or "Your") shall mean the copyright owner or legal entity authorized by
+the copyright owner that is making this Agreement with Company. For legal
+entities, the entity making a Contribution and all other entities that control,
+are controlled by, or are under common control with that entity are considered
+to be a single Contributor. For the purposes of this definition, "control"
+means (i) the power, direct or indirect, to cause the direction or management
+of such entity, whether by contract or otherwise, or (ii) ownership of fifty
+percent (50%) or more of the outstanding shares, or (iii) beneficial ownership
+of such entity.
 
-**Contribution** means an original work of authorship, including modifications
-or additions to an existing work, intentionally submitted by You to the Company
-for inclusion in, or documentation of, a product owned or managed by the Company
-(the **Work**). **Submitted** includes electronic, verbal, or written
-communications to the Company or its representatives through source control,
-issue trackers, mailing lists, or other channels managed by or for the Company
-for discussing and improving the Work. It excludes material conspicuously
-marked or otherwise designated in writing by You as **Not a Contribution**.
+"Contribution" shall mean any original work of authorship, including any
+modifications or additions to an existing work, that is intentionally submitted
+by You to Company for inclusion in, or documentation of, any of the products
+owned or managed by Company (the "Work"). For the purposes of this definition,
+"submitted" means any form of electronic, verbal, or written communication sent
+to Company or its representatives, including but not limited to communication
+on electronic mailing lists, source code control systems, and issue tracking
+systems that are managed by, or on behalf of, Company for the purpose of
+discussing and improving the Work, but excluding communication that is
+conspicuously marked or otherwise designated in writing by You as "Not a
+Contribution."
 
-## 2. Grant of copyright license
-
-Subject to this agreement, You grant the Company and recipients of software
-distributed by the Company a perpetual, worldwide, non-exclusive, no-charge,
+2. Grant of Copyright License. Subject to the terms and conditions of this
+Agreement, You hereby grant to Company and to recipients of software
+distributed by Company a perpetual, worldwide, non-exclusive, no-charge,
 royalty-free, irrevocable copyright license to reproduce, prepare derivative
 works of, publicly display, publicly perform, sublicense, and distribute Your
-Contributions and those derivative works in source or object form.
+Contributions and such derivative works.
 
-This grant expressly permits the Company to distribute and sublicense the
+This grant expressly permits Company to distribute and sublicense the
 Contributions and derivative works under the KickSide Community License
 (including future versions), the MIT License, and commercial or proprietary
 licenses, and to incorporate them in hosted services and commercially licensed
@@ -51,81 +59,50 @@ editions. You understand that those licenses may have different terms and that
 You are not entitled to compensation for those uses. Your retained ownership
 and freedom to use Your own Contributions are unaffected.
 
-## 3. Grant of patent license
+3. Grant of Patent License. Subject to the terms and conditions of this
+Agreement, You hereby grant to Company and to recipients of software
+distributed by Company a perpetual, worldwide, non-exclusive, no-charge,
+royalty-free, irrevocable (except as stated in this section) patent license to
+make, have made, use, offer to sell, sell, import, and otherwise transfer the
+Work, where such license applies only to those patent claims licensable by You
+that are necessarily infringed by Your Contribution(s) alone or by combination
+of Your Contribution(s) with the Work to which such Contribution(s) was
+submitted, including distributions under the licenses described in section 2.
+If any entity institutes patent litigation against You or any other entity
+(including a cross-claim or counterclaim in a lawsuit) alleging that your
+Contribution, or the Work to which you have contributed, constitutes direct or
+contributory patent infringement, then any patent licenses granted to that
+entity under this Agreement for that Contribution or Work shall terminate as of
+the date such litigation is filed.
 
-Subject to this agreement, You grant the Company and recipients of software
-distributed by the Company a perpetual, worldwide, non-exclusive, no-charge,
-royalty-free, irrevocable (except as provided below) patent license to make,
-have made, use, offer to sell, sell, import, and otherwise transfer the Work.
-This grant applies only to patent claims licensable by You that are necessarily
-infringed by Your Contributions alone or by their combination with the Work to
-which they were submitted, including distributions under the licenses described
-in section 2.
+4. You represent that you are legally entitled to grant the above license. If
+your employer(s) has rights to intellectual property that you create that
+includes your Contributions, you represent that you have received permission to
+make Contributions on behalf of that employer, that your employer has waived
+such rights for your Contributions to Company, or that your employer has
+executed a separate Corporate CLA with Company.
 
-If an entity institutes patent litigation against You or any other entity,
-including a cross-claim or counterclaim, alleging that Your Contribution or the
-Work to which You contributed constitutes direct or contributory patent
-infringement, patent licenses granted to that entity under this agreement for
-that Contribution or Work terminate on the date the litigation is filed.
+5. You represent that each of Your Contributions is Your original creation (see
+section 7 for submissions on behalf of others). You represent that Your
+Contribution submissions include complete details of any third-party license
+or other restriction (including, but not limited to, related patents and
+trademarks) of which you are personally aware and which are associated with any
+part of Your Contributions.
 
-## 4. Authority and employer rights
+6. You are not expected to provide support for Your Contributions, except to
+the extent You desire to provide support. You may provide support for free, for
+a fee, or not at all. Unless required by applicable law or agreed to in
+writing, You provide Your Contributions on an "AS IS" BASIS, WITHOUT WARRANTIES
+OR CONDITIONS OF ANY KIND, either express or implied, including, without
+limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT,
+MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE.
 
-You represent that You are legally entitled to grant these licenses. If an
-employer has intellectual property rights in Your Contributions, You represent
-that You have permission to contribute on its behalf, that it has waived those
-rights for Your Contributions to the Company, or that it has executed a separate
-corporate CLA with the Company covering those Contributions.
+7. Should You wish to submit work that is not Your original creation, You may
+submit it to Company separately from any Contribution, identifying the complete
+details of its source and of any license or other restriction (including, but
+not limited to, related patents, trademarks, and license agreements) of which
+you are personally aware, and conspicuously marking the work as "Submitted on
+behalf of a third-party: [named here]".
 
-## 5. Originality and disclosure
-
-You represent that each Contribution is Your original creation, subject to
-section 7. You will include complete details of third-party licenses and other
-restrictions, including related patents and trademarks, of which You are
-personally aware and which are associated with any part of Your Contributions.
-
-## 6. Support and disclaimer
-
-You need not provide support except as You choose; You may provide support for
-free, for a fee, or not at all. Unless required by applicable law or agreed in
-writing, You provide Contributions on an **AS IS** basis, **WITHOUT WARRANTIES
-OR CONDITIONS OF ANY KIND**, express or implied, including title,
-non-infringement, merchantability, or fitness for a particular purpose.
-
-## 7. Submissions on behalf of third parties
-
-Submit work that is not Your original creation separately from Your own
-Contributions. Identify its complete source and all licenses or restrictions,
-including patents, trademarks, and license agreements, of which You are
-personally aware. Conspicuously mark it **Submitted on behalf of a third party:
-[name]**. This agreement does not grant rights You do not hold or override
-third-party licenses.
-
-## 8. Continuing notification
-
-You agree to notify the Company of facts or circumstances of which You become
-aware that make these representations inaccurate in any respect.
-
-## Acceptance
-
-Complete and sign the following, then send it privately to
-[licensing@wippy.ai](mailto:licensing@wippy.ai). Do not commit the completed form
-or post it in a public issue or PR.
-
-```text
-Full legal name:
-GitHub username:
-Email:
-Employer/entity, if applicable:
-I have read and agree to the KickSide Individual Contributor License
-Agreement, Version 1.0, dated September 30, 2026.
-Signature:
-Date:
-```
-
-**Corporate CLA:** contact [licensing@wippy.ai](mailto:licensing@wippy.ai).
-
-## Structural reference
-
-[Apache Individual Contributor License Agreement v2.2](https://www.apache.org/licenses/icla.pdf).
-The Company, scope, distribution terms, contact, and acceptance form above are
-adapted for KickSide.
+8. You agree to notify Company of any facts or circumstances of which you
+become aware that would make these representations inaccurate in any respect.
